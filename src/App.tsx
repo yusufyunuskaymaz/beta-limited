@@ -27,20 +27,27 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import Collapse from "@mui/material/Collapse";
 import { BadgeRoot } from "@mui/material/Badge";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [data, setData] = useState<any[]>([]);
+  const [sessionId, setSessionId] = useState<string>("")
   const fetchData = async () => {
-    const { data } = await axios.get(
+    const { data } : any = await axios.get(
       "https://linkedin-cv-crawler.beta-limited.workers.dev/interview/products"
     );
-    setData(data);
+    setData(data.map((item:any) => ({ ...item, count: 0 })));
   };
   useEffect(() => {
     fetchData();
+    createSession()
   }, []);
 
-  console.log(data, "data");
+  const createSession = async ()=>{
+    const sessionId = await axios.get("https://linkedin-cv-crawler.beta-limited.workers.dev/interview/createsession")
+    setSessionId(sessionId.data)
+  }
+
 
   const [open, setOpen] = useState(false);
 
@@ -48,11 +55,26 @@ function App() {
     setOpen(!open);
   };
 
+  const handleAddClick = (index: number) => {
+    console.log(index, "index");
+    // Update the count for the specific product
+    const newData = [...data];
+    newData[index].count += 1;
+    setData(newData);
+  };
+
+  const handleRemoveClick = (index: number) => {
+    // Update the count for the specific product
+    const newData = [...data];
+    newData[index].count = Math.max(0, newData[index].count - 1);
+    setData(newData);
+  };
+
   return (
-    <Grid
-      container
-      sx={{ mt: 5, bgcolor: "#F7F8FD", p: 3 }}
-    >
+    <>
+    <Navbar />
+    
+    <Grid container sx={{ mt: 5, bgcolor: "#F7F8FD", p: 3 }}>
       <Grid item xs={12} lg={3}>
         <Stack>
           <Card>
@@ -92,7 +114,7 @@ function App() {
               </ListItemButton>
               <ListItemButton>
                 <ListItemIcon>
-                  <Bag  />
+                  <Bag />
                 </ListItemIcon>
                 <ListItemText primary="Breakfast" />
               </ListItemButton>
@@ -126,10 +148,11 @@ function App() {
             spacing={3}
             direction={{ xs: "column", lg: "row" }}
             sx={{ mt: 1, mx: 3 }}
+            
           >
-            {data.map((item) => (
+            {data.map((item, index) => (
               <Stack flexGrow={1} key={item.id}>
-                <Card sx={{ position: "relative",borderRadius:3 }}>
+                <Card sx={{ position: "relative", borderRadius: 3 }}>
                   <Chip
                     sx={{ position: "absolute", top: 10, left: 10 }}
                     label={item.discount}
@@ -153,7 +176,7 @@ function App() {
                     <Stack
                       direction="row"
                       justifyContent="space-between"
-                      alignItems="center"
+                      alignItems="flex-end"
                     >
                       <Stack spacing={1}>
                         <Typography>{item.name}</Typography>
@@ -179,29 +202,37 @@ function App() {
                         </Stack>
                       </Stack>
                       <Stack alignItems="center" spacing={1}>
-                        <IconButton
-                          sx={{
-                            borderRadius: 1,
-                            border: 1,
-                            borderColor: "#C34A5A",
-                            p: "2px",
-                          }}
-                          aria-label="delete"
-                        >
-                          <Minus size="24" color="#C34A5A" />
-                        </IconButton>
-                        <Typography>5</Typography>
-                        <IconButton
-                          sx={{
-                            borderRadius: 1,
-                            border: 1,
-                            borderColor: "#C34A5A",
-                            p: "2px",
-                          }}
-                          aria-label="delete"
-                        >
-                          <Add size="24" color="#C34A5A" />
-                        </IconButton>
+                        {item.count > 0 && (
+                          <>
+                            <IconButton
+                              sx={{
+                                borderRadius: 1,
+                                border: 1,
+                                borderColor: "#C34A5A",
+                                p: "2px",
+                              }}
+                              aria-label="delete"
+                              onClick={() => handleRemoveClick(index)}
+                            >
+                              <Minus size="24" color="#C34A5A" />
+                            </IconButton>
+                            <Typography>{item.count}</Typography>
+                          </>
+                        )}
+
+                        <Box onClick={() => handleAddClick(index)}>
+                          <IconButton
+                            sx={{
+                              borderRadius: 1,
+                              border: 1,
+                              borderColor: "#C34A5A",
+                              p: "2px",
+                            }}
+                            aria-label="delete"
+                          >
+                            <Add size="24" color="#C34A5A" />
+                          </IconButton>
+                        </Box>
                       </Stack>
                     </Stack>
                   </CardContent>
@@ -212,6 +243,7 @@ function App() {
         </Box>
       </Grid>
     </Grid>
+    </>
   );
 }
 
