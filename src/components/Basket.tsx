@@ -1,6 +1,8 @@
 import { Badge, Button, Popover, Typography } from "@mui/material";
 import { Bag2 } from "iconsax-react";
 import React from "react";
+import { IBasket } from "../types/types";
+import {useSelector} from "react-redux"
 
 const Basket = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -17,10 +19,15 @@ const Basket = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const {basketList} = useSelector((state:IBasket) => state.basket);
+
+ const basketCount = basketList.reduce((sum,object)=>sum + object.count,0)
+
   return (
     <>
-      <Badge badgeContent={4} color="info" onClick={handleClick}>
-        <Bag2 size="24" color="#C34A5A" />
+      <Badge badgeContent={basketCount === 0 ? "" : basketCount} color="primary" onClick={handleClick}>
+        <Bag2 size="24" color="#C34A5A" variant="Bulk" />
       </Badge>
 
       <Popover

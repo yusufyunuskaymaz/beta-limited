@@ -16,9 +16,9 @@ import Basket from "./Basket";
 const Navbar = () => {
   return (
     <Stack
-      mx={5}
+      mx={{xs:1,md:5}}
       py={1}
-      direction="row"
+      direction="row" 
       justifyContent="space-between"
       alignItems="center"
     >
@@ -27,16 +27,17 @@ const Navbar = () => {
         sx={{ width: 125, height: 35 }}
         src="https://beta.limited/assets/images/logo-dark.png"
       />
-      <Stack>
+      <Stack >
         <Box
           component="form"
           sx={{
             // p: "2px 0",
-            display: "flex",
+            display: {xs:"none",md:"flex"},
             alignItems: "stretch",
             width: "30vw",
             border: "1px solid #8F94A5",
             borderRadius: 5,
+
           }}
         >
           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
@@ -62,7 +63,8 @@ const Navbar = () => {
               sx={{
                 color: "white",
                 px: 4,
-                textTransform:"none"
+                textTransform: "none",
+                
               }}
             >
               Search
@@ -72,12 +74,11 @@ const Navbar = () => {
       </Stack>
       <Stack direction="row" spacing={2}>
         <IconButton>
-      <Basket />
-          
+          <Basket />
         </IconButton>
         <IconButton>
-          <Badge >
-            <ProfileCircle size="24" color="#C34A5A" />
+          <Badge>
+            <ProfileCircle size="24" color="#C34A5A" variant="Bulk" />
           </Badge>
         </IconButton>
       </Stack>
