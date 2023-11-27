@@ -8,6 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useRef } from "react";
 import { Box } from "@mui/system";
 import axios from "axios";
 import { Add, Minus, Star1 } from "iconsax-react";
@@ -21,7 +22,13 @@ import { IMAGES } from "../mock/images";
 const Cards = (props: ICardProps) => {
   const { products } = props;
 
+  const productList = useRef([]);
+
+  let initialData: IProduct[] = [];
+
   const [data, setData] = useState<IProduct[]>([]);
+
+  const [searchNotFound, setSearchNotFound] = useState(false);
 
   const { basketList } = useSelector((state: IBasket) => state.basket);
 
@@ -31,13 +38,13 @@ const Cards = (props: ICardProps) => {
     const { data } = await axios.get(
       "https://linkedin-cv-crawler.beta-limited.workers.dev/interview/products"
     );
-    setData(
-      data.map((item: any, index: number) => ({
-        ...item,
-        count: 0,
-        image: IMAGES[index],
-      }))
-    );
+    const newData = data.map((item: any, index: number) => ({
+      ...item,
+      count: 0,
+      image: IMAGES[index],
+    }));
+    setData(newData);
+    productList.current = newData;
   };
 
   useEffect(() => {
@@ -74,6 +81,8 @@ const Cards = (props: ICardProps) => {
   useEffect(() => {
     if (products.length > 0) {
       setData(data.filter((item) => products.includes(item.id)));
+    } else {
+      setData(productList.current);
     }
   }, [products]);
 
@@ -81,6 +90,7 @@ const Cards = (props: ICardProps) => {
 
   return (
     <Box>
+    
       <Typography variant="h4" sx={{ ml: { xs: 0, md: 3 } }}>
         Pears, apples, quinces
       </Typography>
@@ -92,7 +102,11 @@ const Cards = (props: ICardProps) => {
         {data.map((item, index) => (
           <Stack flexGrow={1} key={item.id}>
             <Card
-              sx={{ position: "relative", borderRadius: 3, maxWidth: "20rem" }}
+              sx={{
+                position: "relative",
+                borderRadius: 3,
+                maxWidth: { xs: "100%", lg: "20rem" },
+              }}
             >
               <Chip
                 sx={{ position: "absolute", top: 10, left: 10 }}
