@@ -12,47 +12,71 @@ import { Box } from "@mui/system";
 import axios from "axios";
 import { Add, Minus, Star1 } from "iconsax-react";
 import React, { useEffect, useState } from "react";
-import { IBasket, IProduct } from "../types/types";
-import {  useSelector,useDispatch } from "react-redux";
-import { addBasket } from "../redux/actions/actions";
+import { AxiosConfig, ICardProps, IBasket, IProduct } from "../types/types";
+import { useSelector, useDispatch } from "react-redux";
+import { addBasket, deleteBasket } from "../redux/actions/actions";
+import { config } from "process";
+import { IMAGES } from "../mock/images";
 
+const Cards = (props: ICardProps) => {
+  const { products } = props;
 
-
-
-const Cards = () => {
   const [data, setData] = useState<IProduct[]>([]);
 
-  
-  const {basketList} = useSelector((state:IBasket) => state.basket);
+  const { basketList } = useSelector((state: IBasket) => state.basket);
 
   const dispatch = useDispatch();
 
-
   const fetchData = async () => {
-    const { data }: any = await axios.get(
+    const { data } = await axios.get(
       "https://linkedin-cv-crawler.beta-limited.workers.dev/interview/products"
     );
-    setData(data.map((item: any) => ({ ...item, count: 0 })));
+    setData(
+      data.map((item: any, index: number) => ({
+        ...item,
+        count: 0,
+        image: IMAGES[index],
+      }))
+    );
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  const addToBasketRequest = async (id: string) => {
+    const sessionId = sessionStorage.getItem("sessionId");
+    const config: AxiosConfig = {
+      headers: {
+        "Session-ID": sessionId,
+      },
+    };
+    const URL = `https://linkedin-cv-crawler.beta-limited.workers.dev/interview/add-to-cart?id=${+id}`;
 
+    const res = await axios.post(URL, null, config);
+  };
 
   const handleAddClick = (index: number) => {
     const newData = [...data];
     newData[index].count += 1;
     setData(newData);
-    dispatch(addBasket(newData))
+    dispatch(addBasket(newData));
+    addToBasketRequest(newData[index].id);
   };
 
   const handleRemoveClick = (index: number) => {
     const newData = [...data];
     newData[index].count = Math.max(0, newData[index].count - 1);
     setData(newData);
+    dispatch(deleteBasket(newData[index].id));
   };
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setData(data.filter((item) => products.includes(item.id)));
+    }
+  }, [products]);
+
   return (
     <Box>
       <Typography variant="h4" sx={{ ml: { xs: 0, md: 3 } }}>
@@ -65,7 +89,9 @@ const Cards = () => {
       >
         {data.map((item, index) => (
           <Stack flexGrow={1} key={item.id}>
-            <Card sx={{ position: "relative", borderRadius: 3 }}>
+            <Card
+              sx={{ position: "relative", borderRadius: 3, maxWidth: "20rem" }}
+            >
               <Chip
                 sx={{ position: "absolute", top: 10, left: 10 }}
                 label={item.discount}
@@ -74,12 +100,16 @@ const Cards = () => {
 
               <Stack
                 justifyContent="center"
+                alignItems="center"
                 sx={{ bgcolor: "#EEEEEE", height: "18rem" }}
               >
                 <CardMedia
                   component="img"
-                  sx={{ objectFit: "contain" }}
-                  width="100"
+                  sx={{
+                    objectFit: "cover",
+                    maxWidth: "200px",
+                    textAlign: "center",
+                  }}
                   image={item.image}
                   alt={item.name}
                 />

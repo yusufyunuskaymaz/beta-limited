@@ -12,8 +12,11 @@ import {
 } from "@mui/material";
 import { Bag2, ProfileCircle, SearchNormal1 } from "iconsax-react";
 import Basket from "./Basket";
+import Search from "./Search";
+import { NavbarProps } from "../types/types";
 
-const Navbar = () => {
+const Navbar = (props:NavbarProps) => {
+  const {setProducts} = props
   return (
     <Stack
       mx={{xs:1,md:5}}
@@ -27,51 +30,7 @@ const Navbar = () => {
         sx={{ width: 125, height: 35 }}
         src="https://beta.limited/assets/images/logo-dark.png"
       />
-      <Stack >
-        <Box
-          component="form"
-          sx={{
-            // p: "2px 0",
-            display: {xs:"none",md:"flex"},
-            alignItems: "stretch",
-            width: "30vw",
-            border: "1px solid #8F94A5",
-            borderRadius: 5,
-
-          }}
-        >
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchNormal1 size="18" />
-          </IconButton>
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Searching for..."
-            inputProps={{ "aria-label": "searcing for" }}
-          />
-          <Box
-            sx={{
-              bgcolor: "#C34A5A",
-              borderRadius: 5,
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <Button
-              sx={{
-                color: "white",
-                px: 4,
-                textTransform: "none",
-                
-              }}
-            >
-              Search
-            </Button>
-          </Box>
-        </Box>
-      </Stack>
+      <Search setProducts={setProducts} />
       <Stack direction="row" spacing={2}>
         <IconButton>
           <Basket />

@@ -6,24 +6,10 @@ export interface BasketState {
 }
 
 const initialState: BasketState = {
-  basketList: [
-    {
-      count: 0,
-      discount: "",
-      id: "",
-      image: "",
-      name: "",
-      originalPrice: 0,
-      price: 0,
-      rating: 0,
-    },
-  ],
+  basketList: [],
 };
 
-type BasketAction =
-  | { type: typeof ADD_BASKET; payload: IProduct[] }
-  | { type: typeof DELETE_BASKET; payload: IProduct[] }
-  | { type: typeof CLEAR_BASKET,payload:IProduct[] };
+type BasketAction = { type: string; payload: IProduct[] };
 
 export const basketReducer = (
   state: BasketState = initialState,
@@ -32,7 +18,7 @@ export const basketReducer = (
   console.log(action, "accc");
   switch (action.type) {
     case ADD_BASKET:
-      return {
+      return {  
         basketList: [...action.payload],
       };
     case DELETE_BASKET:

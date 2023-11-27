@@ -14,3 +14,17 @@ export type IBasket = {
       basketList:IProduct[]
     }
   }
+
+export type AxiosConfig = {
+  headers: {
+    "Session-ID": string|null;
+  };
+};
+
+export type NavbarProps = {
+  setProducts: React.Dispatch<React.SetStateAction<never[]>>;
+};
+
+export type ICardProps = {
+  products:string[]
+}
