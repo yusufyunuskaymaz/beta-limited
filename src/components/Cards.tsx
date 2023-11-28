@@ -7,6 +7,7 @@ import {
   ListItemButton,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useRef } from "react";
 import { Box } from "@mui/system";
@@ -24,13 +25,8 @@ const Cards = (props: ICardProps) => {
 
   const productList = useRef([]);
 
-  let initialData: IProduct[] = [];
 
   const [data, setData] = useState<IProduct[]>([]);
-
-  const [searchNotFound, setSearchNotFound] = useState(false);
-
-  const { basketList } = useSelector((state: IBasket) => state.basket);
 
   const dispatch = useDispatch();
 
@@ -88,6 +84,8 @@ const Cards = (props: ICardProps) => {
 
   // repo name changed
 
+  const theme = useTheme()
+
   return (
     <Box>
     
@@ -111,7 +109,7 @@ const Cards = (props: ICardProps) => {
               <Chip
                 sx={{ position: "absolute", top: 10, left: 10 }}
                 label={item.discount}
-                color="error"
+                color="primary"
               />
 
               <Stack
@@ -141,14 +139,14 @@ const Cards = (props: ICardProps) => {
                   <Stack spacing={1}>
                     <Typography>{item.name}</Typography>
                     <Stack direction="row">
-                      <Star1 size="20" color="#EFB746" variant="Bulk" />
-                      <Star1 size="20" color="#EFB746" variant="Bulk" />
-                      <Star1 size="20" color="#EFB746" variant="Bulk" />
-                      <Star1 size="20" color="#EFB746" variant="Bulk" />
-                      <Star1 size="20" color="#EFB746" variant="Bulk" />
+                      <Star1 size="20" color={theme.palette.secondary.main} variant="Bulk" />
+                      <Star1 size="20" color={theme.palette.secondary.main} variant="Bulk" />
+                      <Star1 size="20" color={theme.palette.secondary.main} variant="Bulk" />
+                      <Star1 size="20" color={theme.palette.secondary.main} variant="Bulk" />
+                      <Star1 size="20" color={theme.palette.secondary.main} variant="Bulk" />
                     </Stack>
                     <Stack direction="row" spacing={2}>
-                      <Typography sx={{ color: "#C34A5A" }}>
+                      <Typography sx={{ color: "primary.main" }}>
                         $ {item.price}
                       </Typography>
                       <Typography
@@ -168,13 +166,13 @@ const Cards = (props: ICardProps) => {
                           sx={{
                             borderRadius: 1,
                             border: 1,
-                            borderColor: "#C34A5A",
+                            borderColor: "primary.main",
                             p: "2px",
                           }}
                           aria-label="delete"
                           onClick={() => handleRemoveClick(index)}
                         >
-                          <Minus size="24" color="#C34A5A" />
+                          <Minus size="24" color={theme.palette.primary.main} />
                         </ListItemButton>
                         <Typography>{item.count}</Typography>
                       </>
@@ -185,12 +183,12 @@ const Cards = (props: ICardProps) => {
                         sx={{
                           borderRadius: 1,
                           border: 1,
-                          borderColor: "#C34A5A",
+                          borderColor: "primary.main",
                           p: "2px",
                         }}
                         aria-label="delete"
                       >
-                        <Add size="24" color="#C34A5A" />
+                        <Add size="24" color={theme.palette.primary.main} />
                       </ListItemButton>
                     </Box>
                   </Stack>

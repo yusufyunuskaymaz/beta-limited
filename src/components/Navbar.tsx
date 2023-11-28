@@ -9,6 +9,7 @@ import {
   InputBase,
   Paper,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Bag2, ProfileCircle, SearchNormal1 } from "iconsax-react";
 import Basket from "./Basket";
@@ -16,6 +17,8 @@ import Search from "./Search";
 import { NavbarProps } from "../types/types";
 
 const Navbar = (props:NavbarProps) => {
+  const theme = useTheme()
+  console.log(theme,"themee");
   const {setProducts} = props
   return (
     <Stack
@@ -37,7 +40,7 @@ const Navbar = (props:NavbarProps) => {
         </IconButton>
         <IconButton>
           <Badge>
-            <ProfileCircle size="24" color="#C34A5A" variant="Bulk" />
+            <ProfileCircle size="24" color={theme.palette.primary.main} variant="Bulk" />
           </Badge>
         </IconButton>
       </Stack>

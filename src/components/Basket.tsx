@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Popover, Stack, Typography } from "@mui/material";
+import { Badge, Box, Button, Popover, Stack, Typography, useTheme } from "@mui/material";
 import { Bag2 } from "iconsax-react";
 import React, { useEffect } from "react";
 import { IBasket } from "../types/types";
@@ -26,6 +26,8 @@ const Basket = () => {
 
   const basket = basketList.filter((item) => item.count > 0);
 
+  const theme = useTheme()
+
   return (
     <>
       <Badge
@@ -33,7 +35,7 @@ const Basket = () => {
         color="primary"
         onClick={handleClick}
       >
-        <Bag2 size="24" color="#C34A5A" variant="Bulk" />
+        <Bag2 size="24" color={theme.palette.primary.main} variant="Bulk" />
       </Badge>
 
       <Popover

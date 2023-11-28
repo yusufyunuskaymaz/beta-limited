@@ -53,7 +53,7 @@ const Search = (props: NavbarProps) => {
         />
         <Box
           sx={{
-            bgcolor: "#C34A5A",
+            bgcolor: "primary.main",
             borderRadius: 5,
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,
